@@ -35,5 +35,31 @@ searchedCities();
 
 // request API
 function searchCity(cityName) {
-    const url =
+    const url = 'https://api.openweathermap.org/data/2.5/weather?q={cityName}&appid=9aedc875bc1e04894c9dc14f15bfb8e5';
+
+    fetch(url)
+        .then(function (response) {
+            if (response === 200) {
+                const lat = data.coord.lat;
+                const lon = data.coord.lon;
+                weatherData(lat, lon, cityName);
+            } else {
+                alert('City Not Found');
+            }
+        })
+}
+
+// function to get data
+function weatherData(lat, lon) {
+    const url = 'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=9aedc875bc1e04894c9dc14f15bfb8e5';
+
+    fetch(url)
+        .then(function (response) {
+            if (response === 200) {
+                updateWeather(response);
+                searchedCities();
+            } else {
+                alert('Unable to get weather data!');
+            }
+        })
 }
