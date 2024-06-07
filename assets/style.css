@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: rgb(62, 63, 105);
+}
+
+.cards {
+    background-color: rgb(62, 63, 105);
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 4px;
+    padding-right: 25px;
+}
