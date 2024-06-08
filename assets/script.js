@@ -6,7 +6,26 @@ const currentWeather = document.querySelector('.current-weather');
 const forecastSection = document.querySelector('.weather-data section');
 
 // Retrieve last searched cities from localStorage
-let lastSearchedCities = JSON.parse(localStorage.getItem('lastSearchedCities')) || [];
+let searchedCities = JSON.parse(localStorage.getItem('searchedCities')) || [];
+
+// Function to load weather data for all searched cities
+function loadWeatherDataForCities() {
+    searchedCities.forEach(city => {
+        getWeatherData(city);
+    });
+
+// Display history list within the div with id "history"
+searchedCities.forEach(city => {
+    const cityItem = document.createElement('li');
+    cityItem.textContent = city;
+
+    // Append the created li element
+    historyList.appendChild(cityItem);
+    });  
+}
+
+//function to load weather data for searched cities when the page loads
+window.addEventListener('load', loadWeatherDataForCities);
 
 // Event listener for the search button
 searchButton.addEventListener('click', function(event) {
@@ -17,6 +36,12 @@ searchButton.addEventListener('click', function(event) {
 
   // Call a function to fetch weather data based on the city
   getWeatherData(city);
+
+   // Save the searched city to localStorage
+   searchedCities.push(city);
+   localStorage.setItem('searchedCities', JSON.stringify(searchedCities));
+
+
 });
 
 // Function to fetch weather data from the API
@@ -27,25 +52,28 @@ function getWeatherData(city) {
         .then(data => {
             // Process the data and update weather information
             updateWeather(data);
+            updateForecast(data);
 
              // Save the searched city to lastSearchedCities
-             lastSearchedCities.push(city);
-             localStorage.setItem('lastSearchedCities', JSON.stringify(lastSearchedCities));
-        })
+             searchedCities.push(city);
+             localStorage.setItem('searchedCities', JSON.stringify(searchedCities));
+        
+            })
         .catch(error => console.error('Error fetching weather data:', error));
 }
 
 // Function to update weather information
 function updateWeather(data) {
+    if (data.city && data.list && data.list[0] && data.list[0].dt && data.list[0].weather && data.list[0].weather[0]) {
     // Update the current weather section with data
     const cityName = data.city.name;
-    const currentDate = new Date(data.list[0].dt * 1000); // Convert timestamp to date
+    const currentDate = new Date; 
     const iconCode = data.list[0].weather[0].icon;
     const temperature = data.list[0].main.temp;
     const windSpeed = data.list[0].wind.speed;
     const humidity = data.list[0].main.humidity;
 
-       const currentWeatherElement = document.querySelector('.current-weather');
+    const currentWeatherElement = document.querySelector('.current-weather');
     currentWeatherElement.innerHTML = `
         <div class="details">
             <h2>${cityName} (${currentDate.toLocaleDateString()})</h2>
@@ -55,8 +83,13 @@ function updateWeather(data) {
             <p class="ms-2">Humidity: ${humidity}%</p>
         </div>
     `;
+    } else {
+        console.error('Error: Data structure from API response is not as expected');
+    }
+}
 
         // Update the 5-day forecast section with data
+        function updateForecast(data) {
         const forecastSection = document.querySelector('.weather-data section');
         forecastSection.innerHTML = `<h2 class="fw-bolder">5-Day Forecast:</h2>`;
     
@@ -72,11 +105,10 @@ function updateWeather(data) {
             forecastCard.classList.add('cards');
             forecastCard.innerHTML = `
                 <h3>${forecastDate.toLocaleDateString()}</h3>
-                <img class="p-2" src="http://openweathermap.org/img/w/${forecastIconCode}.png" alt="weather icon">
-                <p>Temp: ${forecastTemp} K</p>
-                <p>Wind: ${forecastWindSpeed} m/s</p>
-                <p>Humidity: ${forecastHumidity}%</p>
-            `;
+                <img src="http://openweathermap.org/img/w/${forecastIconCode}.png" alt="weather icon">
+                <p>Temp: ${forecastTemp} °F</p>
+                <p>Wind: ${forecastWindSpeed} MPH</p>
+                <p>Humidity: ${forecastHumidity}%</p>`;
     
             forecastSection.appendChild(forecastCard);
         }
