@@ -14,8 +14,8 @@
     <header class="container-fluid text-center text-white p-2">
         <h1>Weather Dashboard</h1>
     </header>
-    <main class="container-fluid">
-        <div class="container row">
+    <main>
+        <div class="container container-fluid row">
             <aside class="weather-input col-lg-3 pb-3">
                 <h2 class="mt-1 h3 fw-bolder text-center">Search for a City:</h2>
                 <form>
@@ -30,13 +30,15 @@
             </aside>
 
 
-            <section class="col-lg-9 col-sm-12">
-                <div class="mt-4 w-100 border border-dark">
-                    <h2 class="ms-2"> Current City </h2>
-                    <img class="ms-2 mt-2" alt="weather icon">
-                    <p id="today-temp" class="mt-2 ms-2">Temp:</p>
-                    <p id="today-wind" class="ms-2">Wind:</p>
-                    <p id="today-humidity" class="ms-2">Humidity:</p>
+            <section class=" weather-data col-lg-9 col-sm-12">
+                <div class="current-weather mt-4 w-100 border border-dark">
+                <div class="details">
+                    <h2> Charlotte (06/08/2024) </h2>
+                    <img class="icon ms-2 mt-2" alt="weather icon">
+                    <p class="mt-2 ms-2">Temp:</p>
+                    <p class="ms-2">Wind:</p>
+                    <p class="ms-2">Humidity:</p>
+                </div>
                 </div>
 
                 <section class="w-100 pt-2">
