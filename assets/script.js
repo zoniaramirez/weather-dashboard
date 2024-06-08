@@ -35,7 +35,7 @@ searchedCities();
 
 // request API
 function searchCity(cityName) {
-    const url = 'https://api.openweathermap.org/data/2.5/weather?q={cityName}&appid=9aedc875bc1e04894c9dc14f15bfb8e5';
+    const url = 'https://api.openweathermap.org/data/2.5/weather?q={cityName}&appid=9aedc875bc1e04894c9dc14f15bfb8e5&units=imperial';
 
     fetch(url)
         .then(function (response) {
@@ -51,7 +51,7 @@ function searchCity(cityName) {
 
 // function to get data
 function weatherData(lat, lon) {
-    const url = 'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=9aedc875bc1e04894c9dc14f15bfb8e5';
+    const url = 'https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid=9aedc875bc1e04894c9dc14f15bfb8e5&units=imperial';
 
     fetch(url)
         .then(function (response) {
@@ -63,3 +63,24 @@ function weatherData(lat, lon) {
             }
         })
 }
+
+// cuurent forecast
+function updateWeather(data) {
+     const todayForecast = document.querySelector('#current-weather');
+    const cityName = data.city.name;
+    const date = new Date();
+    const iconUrl = `https://openweathermap.org/img/w/${data.list[0].weather[0].icon}.png`;
+    const temp = data.list[0].main.temp;
+    const wind = data.list[0].wind.speed;
+    const humidity = data.list[0].main.humidity;
+
+
+    document.getElementById('cityName').textContent = `${cityName} (${date.toLocaleDateStrin()})`;
+    document.getElementById('icon').src = iconUrl;
+    document.getElementById('today-temp').textContent = `Temp: ${temp} °F`;
+    document.getElementById('today-wind').textContent = `Wind: ${wind} MPH`;
+    document.getElementById('today-humidity').textContent = `Humidity: ${humidity} %`;
+}
+
+// 5 day forecast
+
