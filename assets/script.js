@@ -66,7 +66,7 @@ function weatherData(lat, lon) {
 
 // cuurent forecast
 function updateWeather(data) {
-     const todayForecast = document.querySelector('#current-weather');
+    //  const todayForecast = document.querySelector('#current-weather');
     const cityName = data.city.name;
     const date = new Date();
     const iconUrl = `https://openweathermap.org/img/w/${data.list[0].weather[0].icon}.png`;
@@ -76,11 +76,26 @@ function updateWeather(data) {
 
 
     document.getElementById('cityName').textContent = `${cityName} (${date.toLocaleDateStrin()})`;
-    document.getElementById('icon').src = iconUrl;
+    document.getElementById('iconCurrent').src = iconUrl;
     document.getElementById('today-temp').textContent = `Temp: ${temp} °F`;
     document.getElementById('today-wind').textContent = `Wind: ${wind} MPH`;
     document.getElementById('today-humidity').textContent = `Humidity: ${humidity} %`;
 }
 
 // 5 day forecast
+function daysForecast(data) {
+    document.getElementById('five-day').textContent = '5-Day Forecast:';
+
+// for loop to update forecast for each day
+    for (let i = 0; i < 5; i++) {
+        const dayIndex = i * 8 + 5;
+        const dayEl = document.getElementById(`day-${i + 1}`);
+
+        dayEl.querySelector('.date').textContent = moment(data.list[dayIndex].dt_txt).format("M/DD/YYYY");
+        dayEl.querySelector('.icon').src = `https://openweathermap.org/img/w/${data.list[dayIndex].weather[0].icon}.png`;
+        dayEl.querySelector('.temp').textContent = `Temp: ${(data.list[dayIndex].main.temp)} °F`;
+        dayEl.querySelector('.wind').textContent = `Wind: ${data.list[dayIndex].wind.speed} MPH`;
+        dayEl.querySelector('.humidity').textContent = `Humidity: ${data.list[dayIndex].main.humidity} %`;
+    }
+}
 
