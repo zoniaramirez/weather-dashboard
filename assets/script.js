@@ -5,6 +5,9 @@ const historyList = document.getElementById('history');
 const currentWeather = document.querySelector('.current-weather');
 const forecastSection = document.querySelector('.weather-data section');
 
+// Retrieve last searched cities from localStorage
+let lastSearchedCities = JSON.parse(localStorage.getItem('lastSearchedCities')) || [];
+
 // Event listener for the search button
 searchButton.addEventListener('click', function(event) {
     event.preventDefault();
@@ -22,14 +25,18 @@ function getWeatherData(city) {
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=9aedc875bc1e04894c9dc14f15bfb8e5&units=imperial`)
         .then(response => response.json())
         .then(data => {
-            // Process the data and update the UI with weather information
-            updateWeatherUI(data);
+            // Process the data and update weather information
+            updateWeather(data);
+
+             // Save the searched city to lastSearchedCities
+             lastSearchedCities.push(city);
+             localStorage.setItem('lastSearchedCities', JSON.stringify(lastSearchedCities));
         })
         .catch(error => console.error('Error fetching weather data:', error));
 }
 
-// Function to update the UI with weather information
-function updateWeatherUI(data) {
+// Function to update weather information
+function updateWeather(data) {
     // Update the current weather section with data
     const cityName = data.city.name;
     const currentDate = new Date(data.list[0].dt * 1000); // Convert timestamp to date
