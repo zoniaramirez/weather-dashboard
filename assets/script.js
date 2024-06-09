@@ -41,6 +41,14 @@ searchButton.addEventListener('click', function(event) {
    searchedCities.push(city);
    localStorage.setItem('searchedCities', JSON.stringify(searchedCities));
 
+      // Append the searched city to the history list
+      const cityItem = document.createElement('li');
+      cityItem.textContent = city;
+      historyList.appendChild(cityItem);
+  
+      // Clear the input field
+      searchInput.value = '';
+
 
 });
 
@@ -91,7 +99,7 @@ function updateWeather(data) {
         // Update the 5-day forecast section with data
         function updateForecast(data) {
         const forecastSection = document.querySelector('.weather-data section');
-        forecastSection.innerHTML = `<h2 class="fw-bolder">5-Day Forecast:</h2>`;
+        forecastSection.innerHTML = `<h2 class="fw-bolder pt-2 pb-2">5-Day Forecast:</h2>`;
     
         for (let i = 1; i <= 5; i++) {
             const forecastData = data.list[i * 8]; // Data for each day is at 8 intervals
