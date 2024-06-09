@@ -9,23 +9,31 @@ const forecastSection = document.querySelector('.weather-data section');
 let searchedCities = JSON.parse(localStorage.getItem('searchedCities')) || [];
 
 // Function to load weather data for all searched cities
-let isHistoryLoaded = false;
+let historyLoaded = false;
 
 function loadWeatherDataForCities() {
-    if (!isHistoryLoaded) {
-        historyList.innerHTML = '';
+    if (!historyLoaded) {
+        const historyList = document.getElementById('history-list');
+        historyList.innerHTML = ''; 
+
         searchedCities.forEach(city => {
-            getWeatherData(city);
-            const cityItem = document.createElement('li');
-            cityItem.textContent = city;
-            historyList.appendChild(cityItem);
+            const cityButton = document.createElement('button');
+            cityButton.textContent = city;
+            cityButton.classList.add('history-button'); // Add a class for styling or event handling
+            cityButton.addEventListener('click', function() {
+                getWeatherData(city); // Fetch weather data for the selected city
+            });
+            historyList.appendChild(cityButton);
         });
-        isHistoryLoaded = true;
+
+        historyLoaded = true;
     }
 }
 
 //function to load weather data for searched cities when the page loads
-window.addEventListener('load', loadWeatherDataForCities);
+window.addEventListener('load', () => {
+     loadWeatherDataForCities();
+});
 
 // Event listener for the search button
 searchButton.addEventListener('click', function(event) {
@@ -49,7 +57,16 @@ searchButton.addEventListener('click', function(event) {
       // Clear the input field
       searchInput.value = '';
 
+});
 
+// Event listener for history list items
+historyList.addEventListener('click', function(event) {
+    if (event.target.classList.contains('history-item')) {
+        const selectedCity = event.target.textContent;
+        
+        // Call a function to fetch weather data for the selected city
+        getWeatherData(selectedCity);
+    }
 });
 
 // Function to fetch weather data from the API

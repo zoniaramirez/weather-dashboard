@@ -13,3 +13,12 @@ header {
     color: white;
     border-radius: 5px;
 }
+
+.history-button {
+    padding: 5px 100px;
+    margin: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
