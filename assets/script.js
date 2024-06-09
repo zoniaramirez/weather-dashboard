@@ -9,19 +9,19 @@ const forecastSection = document.querySelector('.weather-data section');
 let searchedCities = JSON.parse(localStorage.getItem('searchedCities')) || [];
 
 // Function to load weather data for all searched cities
+let isHistoryLoaded = false;
+
 function loadWeatherDataForCities() {
-    searchedCities.forEach(city => {
-        getWeatherData(city);
-    });
-
-// Display history list within the div with id "history"
-searchedCities.forEach(city => {
-    const cityItem = document.createElement('li');
-    cityItem.textContent = city;
-
-    // Append the created li element
-    historyList.appendChild(cityItem);
-    });  
+    if (!isHistoryLoaded) {
+        historyList.innerHTML = '';
+        searchedCities.forEach(city => {
+            getWeatherData(city);
+            const cityItem = document.createElement('li');
+            cityItem.textContent = city;
+            historyList.appendChild(cityItem);
+        });
+        isHistoryLoaded = true;
+    }
 }
 
 //function to load weather data for searched cities when the page loads
@@ -98,26 +98,36 @@ function updateWeather(data) {
 
         // Update the 5-day forecast section with data
         function updateForecast(data) {
-        const forecastSection = document.querySelector('.weather-data section');
-        forecastSection.innerHTML = `<h2 class="fw-bolder pt-2 pb-2">5-Day Forecast:</h2>`;
-    
-        for (let i = 1; i <= 5; i++) {
-            const forecastData = data.list[i * 8]; // Data for each day is at 8 intervals
-            const forecastDate = new Date(forecastData.dt * 1000);
-            const forecastIconCode = forecastData.weather[0].icon;
-            const forecastTemp = forecastData.main.temp;
-            const forecastWindSpeed = forecastData.wind.speed;
-            const forecastHumidity = forecastData.main.humidity;
-    
-            const forecastCard = document.createElement('div');
-            forecastCard.classList.add('cards');
-            forecastCard.innerHTML = `
-                <h3>${forecastDate.toLocaleDateString()}</h3>
-                <img src="http://openweathermap.org/img/w/${forecastIconCode}.png" alt="weather icon">
-                <p>Temp: ${forecastTemp} °F</p>
-                <p>Wind: ${forecastWindSpeed} MPH</p>
-                <p>Humidity: ${forecastHumidity}%</p>`;
-    
-            forecastSection.appendChild(forecastCard);
+            const forecastSection = document.querySelector('.weather-data section');
+            forecastSection.innerHTML = `<h2 class="fw-bolder pt-2 pb-2">5-Day Forecast:</h2>`;
+        
+            for (let i = 1; i <= 5; i++) {
+                const forecastIndex = i * 8-1;
+                
+                // Check if forecast data is available for the current day
+                if (data.list.length > forecastIndex) {
+                    const forecastData = data.list[forecastIndex];
+                    
+                    if (forecastData && forecastData.dt && forecastData.weather && forecastData.weather[0]) {
+                        const forecastDate = new Date(forecastData.dt * 1000);
+                        const forecastIconCode = forecastData.weather[0].icon;
+                        const forecastTemp = forecastData.main.temp;
+                        const forecastWindSpeed = forecastData.wind.speed;
+                        const forecastHumidity = forecastData.main.humidity;
+        
+                        const forecastCard = document.createElement('div');
+                        forecastCard.classList.add('col-lg-2', 'm-2', 'cards');
+                        forecastCard.innerHTML = `
+                            <h3>${forecastDate.toLocaleDateString()}</h3>
+                            <img src="http://openweathermap.org/img/w/${forecastIconCode}.png" alt="weather icon">
+                            <p>Temp: ${forecastTemp} °F</p>
+                            <p>Wind: ${forecastWindSpeed} MPH</p>
+                            <p>Humidity: ${forecastHumidity}%</p>`;
+        
+                        forecastSection.appendChild(forecastCard);
+                    } else {
+                        console.error('Error: Forecast data is not as expected for day ' + i);
+                    }
+                }
+            }
         }
-    }

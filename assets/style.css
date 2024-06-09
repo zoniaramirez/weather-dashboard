@@ -8,8 +8,8 @@ header {
 
 .cards {
     background-color: rgb(62, 63, 105);
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 4px;
-    padding-right: 25px;
+    padding: 10px;
+    margin-bottom: 20px;
+    color: white;
+    border-radius: 5px;
 }
