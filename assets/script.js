@@ -9,31 +9,34 @@ const forecastSection = document.querySelector('.weather-data section');
 let searchedCities = JSON.parse(localStorage.getItem('searchedCities')) || [];
 
 // Function to load weather data for all searched cities
-let historyLoaded = false;
+(function() {
+    let historyLoaded = false;
 
-function loadWeatherDataForCities() {
-    if (!historyLoaded) {
-        const historyList = document.getElementById('history-list');
-        historyList.innerHTML = ''; 
+    // Function to load weather data for cities
+    function loadWeatherDataForCities() {
+        if (!historyLoaded) {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = ''; 
 
-        searchedCities.forEach(city => {
-            const cityButton = document.createElement('button');
-            cityButton.textContent = city;
-            cityButton.classList.add('history-button'); // Add a class for styling or event handling
-            cityButton.addEventListener('click', function() {
-                getWeatherData(city); // Fetch weather data for the selected city
+            searchedCities.forEach(city => {
+                const cityButton = document.createElement('button');
+                cityButton.textContent = city;
+                cityButton.classList.add('history-button');
+                cityButton.addEventListener('click', function() {
+                    getWeatherData(city);
+                });
+                historyList.appendChild(cityButton);
             });
-            historyList.appendChild(cityButton);
-        });
 
-        historyLoaded = true;
+            historyLoaded = true; 
+        }
     }
-}
 
-//function to load weather data for searched cities when the page loads
-window.addEventListener('load', () => {
-     loadWeatherDataForCities();
-});
+    window.loadWeatherDataForCities = loadWeatherDataForCities;
+})();
+
+// Call the function when the page loads
+loadWeatherDataForCities();
 
 // Event listener for the search button
 searchButton.addEventListener('click', function(event) {
@@ -49,12 +52,6 @@ searchButton.addEventListener('click', function(event) {
    searchedCities.push(city);
    localStorage.setItem('searchedCities', JSON.stringify(searchedCities));
 
-      // Append the searched city to the history list
-      const cityItem = document.createElement('li');
-      cityItem.textContent = city;
-      historyList.appendChild(cityItem);
-  
-      // Clear the input field
       searchInput.value = '';
 
 });
