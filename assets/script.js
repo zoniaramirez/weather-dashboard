@@ -8,16 +8,20 @@ const forecastSection = document.querySelector('.weather-data section');
 // Retrieve last searched cities from localStorage
 let searchedCities = JSON.parse(localStorage.getItem('searchedCities')) || [];
 
-// Function to create a button for each city in the searched and add it to the history list
-function renderCityButtons() {
-    // Get the container where the buttons should be added
-    const historyContainer = document.getElementById('history-container');
+// Function to append city to the history
+function appendCity(city) {
+    // Get the history container
+    let historyContainer = document.getElementById('history-container');
 
-    // Clear the container
-    historyContainer.innerHTML = '';
+    // Check if the city already exists in the history
+    let cityExists = Array.from(historyContainer.children).some(child => child.textContent.trim() === city);
 
-    // Iterate over the array of searched cities
-    searchedCities.forEach(city => {
+    // If the city doesn't exist, append it
+    if (!cityExists) {
+        // If the history already contains 8 cities, remove the oldest one
+        if (historyContainer.children.length >= 8) {
+            historyContainer.removeChild(historyContainer.firstChild);
+        }
         // Create a new button
         const cityButton = document.createElement('button');
         cityButton.textContent = city;
@@ -30,13 +34,27 @@ function renderCityButtons() {
 
         // Add the button to the container
         historyContainer.appendChild(cityButton);
-    });
+    }
 }
-    window.renderCityButtons = renderCityButtons;
 
+window.onload = function () {
+    const forecastData = JSON.parse(localStorage.getItem('forecastData'));
 
-// Call the function when the page loads
-// loadWeatherDataForCities();
+    if (forecastData) {
+        updateWeather({ list: forecastData });
+        updateForecast({ list: forecastData });
+    }
+}
+// Get the container where the buttons should be added
+const historyContainer = document.getElementById('history-container');
+
+// Clear the container
+historyContainer.innerHTML = '';
+
+// Iterate over the array of searched cities
+searchedCities.forEach(city => {
+    appendCity(city);
+});
 
 // Event listener for the search button
 searchButton.addEventListener('click', function (event) {
@@ -45,11 +63,11 @@ searchButton.addEventListener('click', function (event) {
     // Get the value entered in the search input
     const city = searchInput.value.trim();
 
-    // Call a function to fetch weather data based on the city
+    // Append the city to the history
+    appendCity(city);
+
+    // Fetch and display the weather data for the city
     getWeatherData(city);
-
-    searchInput.value = '';
-
 });
 
 // Function to fetch weather data from the API
@@ -58,22 +76,29 @@ function getWeatherData(city) {
     fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=9aedc875bc1e04894c9dc14f15bfb8e5&units=imperial`)
         .then(response => response.json())
         .then(data => {
+
+            // Store the weather data in localStorage
+            localStorage.setItem('currentWeather', JSON.stringify(data));
+
             // Process the data and update weather information
             updateWeather(data);
-            updateForecast(data);
 
+            // Fetch forecast data from API
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`)
+                .then(response => response.json())
+                .then(data => {
+                    // Store forecast data in localStorage
+                    localStorage.setItem('forecastData', JSON.stringify(data.list));
+
+                    // Update forecast information on the page
+                    updateForecast(data);
+                });
             // Save the searched city to lastSearchedCities
             searchedCities.push(city);
             localStorage.setItem('searchedCities', JSON.stringify(searchedCities));
-
-
-            // Call loadWeatherDataForCities to update the history list buttons
-            renderCityButtons();
-
         })
         .catch(error => console.error('Error fetching weather data:', error));
 }
-
 // Function to update weather information
 function updateWeather(data) {
     if (data.city && data.list && data.list[0] && data.list[0].dt && data.list[0].weather && data.list[0].weather[0]) {
@@ -93,12 +118,9 @@ function updateWeather(data) {
             <p class="mt-2 ms-2">Temp: ${temperature} °F</p>
             <p class="ms-2">Wind: ${windSpeed} MPH</p>
             <p class="ms-2">Humidity: ${humidity}%</p>
-        </div>
-    `;
-
-    
-    // Store weather data in localStorage
-    localStorage.setItem('currentWeatherData', JSON.stringify(data.list[0]));
+        </div>`;
+        // Store weather data in localStorage
+        localStorage.setItem('currentWeatherData', JSON.stringify(data.list[0]));
 
     } else {
         console.error('Error: Data structure from API response is not as expected');
@@ -134,24 +156,21 @@ function updateForecast(data) {
                             <p>Humidity: ${forecastHumidity}%</p>`;
 
                 forecastSection.appendChild(forecastCard);
-            } else {
-                console.error('Error: Forecast data is not as expected for day ' + i);
-
-                // Store forecast data in localStorage
-                localStorage.setItem('forecastData', JSON.stringify(data.list));
-
-                // Call loadWeatherDataForCities when the page loads to render history list buttons
-                loadWeatherDataForCities();
-
-                // Retrieve and display weather data from localStorage when the page loads
-                const currentWeatherData = JSON.parse(localStorage.getItem('currentWeatherData'));
-                const forecastData = JSON.parse(localStorage.getItem('forecastData'));
-
-                if (currentWeatherData && forecastData) {
-                    updateWeather(currentWeatherData);
-                    updateForecast({ list: forecastData });
-                }
             }
+            // Store forecast data in localStorage
+            localStorage.setItem('forecastData', JSON.stringify(data.list));
         }
+    }
+}
+window.onload = function () {
+    const currentWeatherData = JSON.parse(localStorage.getItem('currentWeather'));
+    const forecastData = JSON.parse(localStorage.getItem('forecastData'));
+
+    if (currentWeatherData) {
+        updateWeather(currentWeatherData);
+    }
+
+    if (forecastData) {
+        updateForecast({ list: forecastData });
     }
 }
