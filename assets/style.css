@@ -15,8 +15,9 @@ header {
 }
 
 .history-button {
-    padding: 5px 100px;
-    margin: 5px;
+    width: 100%;
+    padding: 5px;
+    margin: 6px;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 5px;
