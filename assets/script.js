@@ -32,6 +32,9 @@ function appendCity(city) {
             getWeatherData(city);
         });
 
+        // Clear the search input
+        document.getElementById('search-input').value = '';
+
         // Add the button to the container
         historyContainer.appendChild(cityButton);
     }
