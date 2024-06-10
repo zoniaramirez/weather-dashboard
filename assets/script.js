@@ -84,7 +84,7 @@ function getWeatherData(city) {
             updateWeather(data);
 
             // Fetch forecast data from API
-            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`)
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=9aedc875bc1e04894c9dc14f15bfb8e5&units=imperial`)
                 .then(response => response.json())
                 .then(data => {
                     // Store forecast data in localStorage
@@ -97,7 +97,6 @@ function getWeatherData(city) {
             searchedCities.push(city);
             localStorage.setItem('searchedCities', JSON.stringify(searchedCities));
         })
-        .catch(error => console.error('Error fetching weather data:', error));
 }
 // Function to update weather information
 function updateWeather(data) {
@@ -121,10 +120,7 @@ function updateWeather(data) {
         </div>`;
         // Store weather data in localStorage
         localStorage.setItem('currentWeatherData', JSON.stringify(data.list[0]));
-
-    } else {
-        console.error('Error: Data structure from API response is not as expected');
-    }
+    } 
 }
 
 // Update the 5-day forecast section with data
