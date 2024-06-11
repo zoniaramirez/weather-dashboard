@@ -18,11 +18,11 @@ This weather dashboard was created as a challenge for bootcamp students to apply
 
 ## Screenshot
 
-![alttext](/assets/images/Modal&Datepickerscreenshot.png)
+![alttext](./assets/Images/Weather-Dashboard-start.png)
 
-![alttext](/assets/images/Task-boardscreenshot.png)
+![alttext](./assets/Images/Weather-Dashboard.png)
 
-![alttext](/assets/images/localstoragescreenshot.png)
+![alttext](./assets/Images/Weather-Dashboard-console.png)
 
 ## Links
 
