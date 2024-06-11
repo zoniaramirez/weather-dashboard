@@ -116,7 +116,7 @@ function updateWeather(data) {
         currentWeatherElement.innerHTML = `
         <div class="details">
             <h2>${cityName} (${currentDate.toLocaleDateString()})</h2>
-            <img class="icon ms-2 mt-2" src="http://openweathermap.org/img/w/${iconCode}.png" alt="weather icon">
+            <img class="icon ms-2 mt-2" src="https://openweathermap.org/img/w/${iconCode}.png" alt="weather icon">
             <p class="mt-2 ms-2">Temp: ${temperature} °F</p>
             <p class="ms-2">Wind: ${windSpeed} MPH</p>
             <p class="ms-2">Humidity: ${humidity}%</p>
@@ -149,7 +149,7 @@ function updateForecast(data) {
                 forecastCard.classList.add('col-lg-2', 'm-2', 'cards');
                 forecastCard.innerHTML = `
                             <h3>${forecastDate.toLocaleDateString()}</h3>
-                            <img src="http://openweathermap.org/img/w/${forecastIconCode}.png" alt="weather icon">
+                            <img src="https://openweathermap.org/img/w/${forecastIconCode}.png" alt="weather icon">
                             <p>Temp: ${forecastTemp} °F</p>
                             <p>Wind: ${forecastWindSpeed} MPH</p>
                             <p>Humidity: ${forecastHumidity}%</p>`;
