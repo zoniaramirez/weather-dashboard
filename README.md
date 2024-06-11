@@ -12,7 +12,7 @@ This weather dashboard was created as a challenge for bootcamp students to apply
     - Given a weather dashboard with form inputs.
     - When a city is searched you are presented with current and future weather conditions for that city.
     - After city is searched it is stored to the search history.
-    - When you view current weather conditions for that city you are presented with city name, date, icon representing weather conditions,         temperature, humidity, and wind speed. 
+    - When you view current weather conditions for that city you are presented with city name, date, icon representing weather conditions, temperature, humidity, and wind speed. 
     - When you view future weather conditions for that city you are presented with a 5-day forecast that displays date, icon representing weather conditions, temperature, windspeed, and humidity.
     - When you click on a city in the search history you are presented with the current and future weather conditions for that city.
 
